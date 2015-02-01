@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="http://localhost:8001/faye.js"></script>
+</head>
+<body>
+  <input id="input" type="text" placeholder="Type here and press enter">
+  <div id="output"></div>
+  <script>
+  $(function(){
+
+    var client = new Faye.Client('http://localhost:8001/faye');
+
+    $('#input').keyup(function(e){
+      if(e.keyCode==13){
+      client.publish('/messages', {text: $('#input').val()});
+      $('#input').val('');
+      }
+    });
+
+    client.subscribe('/messages', function(message){
+    $('#output').prepend(message.text+'<br />')
+    });
+
+  });
+  </script>
+</body>
+</html>
